@@ -14,10 +14,21 @@ import org.apache.kafka.streams.kstream.KTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class WordCountApp.
+ *
+ * @author Atul
+ */
 public class WordCountApp {
 
+  /** The logger. */
   Logger logger = LoggerFactory.getLogger(WordCountApp.class.getName());
 
+  /**
+   * The main method.
+   *
+   * @param args the arguments
+   */
   public static void main(String[] args) {
 
     Properties config = new Properties();
@@ -54,7 +65,6 @@ public class WordCountApp {
     KafkaStreams streams = new KafkaStreams(topology, config);
 
     streams.start();
-    System.out.println(streams.toString());
 
     // shutdown hook to correctly close streams
     Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
