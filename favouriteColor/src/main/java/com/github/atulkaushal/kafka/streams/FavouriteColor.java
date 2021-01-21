@@ -12,6 +12,7 @@ import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
+import org.apache.kafka.streams.kstream.Produced;
 
 /**
  * The Class FavouriteColor.
@@ -53,7 +54,7 @@ public class FavouriteColor {
             .mapValues(value -> value.toString().split(",")[1].toLowerCase())
             .filter((user, color) -> Arrays.asList("green", "blue", "red").contains(color));
 
-    usersAndColors.to(TEMP_TOPIC_FOR_PROCESSING);
+    usersAndColors.to(TEMP_TOPIC_FOR_PROCESSING, Produced.with(Serdes.String(), Serdes.String()));
 
     KTable<String, Long> favouriteColors =
         builder
@@ -62,7 +63,7 @@ public class FavouriteColor {
             .count();
 
     // Write results back to Kafka
-    favouriteColors.toStream().to(OUTPUT_TOPIC);
+    favouriteColors.toStream().to(OUTPUT_TOPIC, Produced.with(Serdes.String(), Serdes.Long()));
 
     Topology topology = builder.build();
     KafkaStreams streams = new KafkaStreams(topology, config);
