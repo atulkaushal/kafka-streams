@@ -8,5 +8,6 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>wordCountApp</module>
+		<module>favouriteColor</module>
 	</modules>
 </project>
