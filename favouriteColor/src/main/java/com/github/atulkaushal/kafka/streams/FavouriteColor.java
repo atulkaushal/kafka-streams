@@ -12,6 +12,7 @@ import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
+import org.apache.kafka.streams.kstream.Named;
 import org.apache.kafka.streams.kstream.Produced;
 
 /**
@@ -37,8 +38,8 @@ public class FavouriteColor {
   public static void main(String[] args) {
 
     Properties config = new Properties();
-    config.put(StreamsConfig.APPLICATION_ID_CONFIG, "favourite-color-app1");
-    config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+    config.put(StreamsConfig.APPLICATION_ID_CONFIG, "favourite-color-app");
+    config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
     config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
     config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
     config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
@@ -60,7 +61,7 @@ public class FavouriteColor {
         builder
             .table(TEMP_TOPIC_FOR_PROCESSING)
             .groupBy((user, color) -> new KeyValue(color, color))
-            .count();
+            .count(Named.as("CountByColors"));
 
     // Write results back to Kafka
     favouriteColors.toStream().to(OUTPUT_TOPIC, Produced.with(Serdes.String(), Serdes.Long()));
